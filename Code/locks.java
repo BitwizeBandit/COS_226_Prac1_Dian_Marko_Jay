@@ -16,8 +16,8 @@ interface Lock
 
 class LockOne implements Lock
 {
-// LockOne algorithm works with flags only, while the other thread is still
-// expressing interest, this thread will wait
+    // LockOne algorithm works with flags only, while the other thread is still
+    // expressing interest, this thread will wait
 
     private boolean[] flag = new boolean[2];
 
@@ -39,20 +39,20 @@ class LockOne implements Lock
         // 'id'thread will reach this point when 'flag[j]' becomes false
     }
 
-// When no longer interested, this thread will just release interest
+    // When no longer interested, this thread will just release interest
     @Override
     public void unlock(int id)
     {
         flag[id] = false; // not interested anymore, jive other thread a chance now
     }
 
-} // This is not deadlock free in a concurrent environment, each thread could simultaneously
-  // wait for the other
+} /*  This is not deadlock free in a concurrent environment, each thread could simultaneously
+   wait for the other */
 
 class LockTwo implements Lock
 {
-// LockTwo algorithm works with a "victim mentality" while this thread is the victim
-// it will wait. When a thread locks, it elects itself as the victim immediately
+    // LockTwo algorithm works with a "victim mentality" while this thread is the victim
+    // it will wait. When a thread locks, it elects itself as the victim immediately
 
 
     @Override
@@ -61,7 +61,7 @@ class LockTwo implements Lock
 
     }
 
-// Optionally can do validation on victim but it is usually left completely void
+    // Optionally can do validation on victim but it is usually left completely void
     @Override
     public void unlock(int id)
     {
@@ -72,7 +72,7 @@ class LockTwo implements Lock
 
 class PetersonsLock implements Lock
 {
-// Peterson's deadlock-free, starvation-free lock algorithm
+    // Peterson's deadlock-free, starvation-free lock algorithm
     private volatile boolean[] interested = {false, false }; // Only two threads
     private volatile int victim; // These are both volatile so nothing is ever stale which helps in other places
 
@@ -99,9 +99,9 @@ class PetersonsLock implements Lock
     } // Simply stop expressing interest
 }
 
-// Each class has a similar structure:
+// we saw that Each class has a similar structure:
 // - Implements the Lock interface which has lock and unlock
-// - Overrides the two functions with their own implementations
+// - Overridding the two functions with their own implementations
 
 class shared_counter
 {
@@ -122,12 +122,12 @@ class shared_counter
     } // We can thus compare the values of the counters to check for
       // read/write errors
 
-    // Some getters
-    public int counter() { 
+    // Some getters 
+    public int counter() { // the overall counter, if its short then something was lost
         return counter; 
     }
 
-    public int thread0_counter() { 
+    public int thread0_counter() { // if its 0, T0 never got in (starvation)
         return thread0_counter; 
     }
 
@@ -170,7 +170,8 @@ class thread implements Runnable
                 lock.unlock(id); // Exit the critical section
             }
 
-            Thread.yield(); // Let the other thread run
+            Thread.yield(); /* Let the other thread run, forces more interleaving between the 2 threads, 
+                            will expose a race if one exists, it actually makes the race window get tested far more often */
         }
 
         int this_counter;
@@ -182,7 +183,6 @@ class thread implements Runnable
         System.out.println("The shared counter is " + counter.counter());
     }
 
-    public void stop() { running = false; } // A method to let us stop running
 }
 
 // ========================= MAIN ============================ //
@@ -215,13 +215,14 @@ public class locks
         Thread T1 = new Thread(thread1);
 
         T0.setDaemon(true);
-        T1.setDaemon(true); // This lets the program end otherwise when deadlock occurs it won't exit
+        T1.setDaemon(true); /*  This lets the program end otherwise when deadlock occurs it won't exit,
+                            after main() executed, any still spinning deamon threads is killed */
 
         long start = System.currentTimeMillis();
 
         T0.start();
         T1.start();
-        T0.join(2000);
+        T0.join(2000); // will stop waiting for T0 after 2 seconds, so program wont freeze and we can report a deadlock
         T1.join(2000); // This is because if deadlock occurs and there's no join timeout the join hangs
 
         long end = System.currentTimeMillis();
