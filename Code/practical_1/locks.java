@@ -4,7 +4,7 @@
 
 // COS 226 (Concurrent Systems) Practical 1
 // A practical implementing LockOne, LockTwo and Peterson's Lock and some tests
-// Last Updated: 28 July 2026
+// Last Updated: 2 August 2026
 
 // ========================= our LOCK IMPLEMENTATIONS ============================ //
 
@@ -19,7 +19,7 @@ class LockOne implements Lock
     // LockOne algorithm works with flags only, while the other thread is still
     // expressing interest, this thread will wait
 
-    private boolean[] flag = new boolean[2];
+    private volatile boolean[] flag = new boolean[2]; // changed to volatile to prevent stale reads 
 
     @Override
     public void lock(int id)
@@ -254,12 +254,15 @@ public class locks
             int lost = 2*iterations - counter.counter();
             System.out.println("MISSING INCREMENTS: " + lost + " lost");
             if (lock_name.equals("LockOne") || duration > 2000) System.out.println("DEADLOCK OCCURRED");
-            else System.out.println("MUTUAL EXCLUSION VIOLATED");
+            // You can tell deadlock occurred because we waited for too long (the thread was forcibly stopped) 
+            // and we also know LockOne deadlocks
+            else System.out.println("MUTUAL EXCLUSION VIOLATED"); // Since we know SOME kind of race condition happened and it is not deadlock, 
+            // it is mutual exclusion violation
         }
         else if (counter.thread0_counter() == 0 || counter.thread1_counter() == 0)
         {
             System.out.println("One thread has zero increments");
-            System.out.println("STARVATION OCCURRED");
+            System.out.println("STARVATION OCCURRED"); // Since one thread didn't get in at all, one definitely starved
         }
         else System.out.println("Both threads successful!");
     }
