@@ -54,18 +54,30 @@ class LockTwo implements Lock
     // LockTwo algorithm works with a "victim mentality" while this thread is the victim
     // it will wait. When a thread locks, it elects itself as the victim immediately
 
-
+    private volatile int victim;
+    
     @Override
     public void lock(int id)
     {
+        victim = id; //id thread lets the other thread go first (becomes victim)
 
+        //id thread will wait till no longer the victim
+        //it becomes free to enter once the other thread overwrites victim var with its own id
+
+        while (victim == id) {
+            //id thread keeps checking, and does nothing while it is the victim
+        }
+
+        //id thread will reach this point when victim var is no longer equal to id
     }
 
     // Optionally can do validation on victim but it is usually left completely void
     @Override
     public void unlock(int id)
     {
-
+        /*Intentionally empty, releasing the lock is not this thread's job,
+        it happens automatically when the other thread calls lock() and overwrites victim var
+        and thus unlocking the previous thread*/
     }
 
 } // This is not deadlock-free in a sequential environment and can also have starvation if spinning occurs early
