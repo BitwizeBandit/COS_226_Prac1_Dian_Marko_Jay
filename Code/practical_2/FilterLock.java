@@ -32,15 +32,36 @@ public class FilterLock implements Lock
 
     }
 
+    private boolean existsSameOrHigher(int me, int L) 
+    {
+        for (int k = 0; k < n; k++) 
+        {
+            if (k != me && level[k].value >= L) 
+            {
+                return true; //returns true if there is a lock higher than the current one
+            }
+        }
+        return false;
+    }
+
     @Override
     public void lock(int threadId) 
     {
+        for (int j = 1; j < n; j++) 
+        {
+            level[threadId].value = j;
+            victim[j].value = threadId; //becomes victim
 
+            while (existsSameOrHigher(threadId, j) && victim[j].value == threadId) 
+            {
+                // waits while lokced
+            }
+        }
     }
 
     @Override
     public void unlock(int threadId) 
     {
-        
+        level[threadId].value = 0; //changes val to become unlocked
     }
 }
