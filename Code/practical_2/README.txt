@@ -14,6 +14,7 @@ Conveniently, there is a Makefile to run the program, therefore we can easily ru
     make all
     make run
 3. To clean up, type the following and enter
+    make clean
 
 ===== LOCKS IMPLEMENTED =====
 
