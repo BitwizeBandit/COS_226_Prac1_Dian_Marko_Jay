@@ -32,7 +32,7 @@ public class FilterLock implements Lock
 
     }
 
-    private boolean existsSameOrHigher(int me, int L) 
+    private boolean existsSameOrHigher(int me, int L) // garuntees at most one thread reaches the last level (Mutual Exclusion)
     {
         for (int k = 0; k < n; k++) 
         {
@@ -41,7 +41,7 @@ public class FilterLock implements Lock
                 return true; //returns true if there is a lock higher than the current one
             }
         }
-        return false;
+        return false; // if no other thread is in level L or higer
     }
 
     @Override
@@ -49,19 +49,22 @@ public class FilterLock implements Lock
     {
         for (int j = 1; j < n; j++) 
         {
-            level[threadId].value = j;
-            victim[j].value = threadId; //becomes victim
+            level[threadId].value = j; // threadId tries to get in level j
+            victim[j].value = threadId; // becomes victim, sacrifices self
 
+                                                    // victim makes at least one thread always gets through each level(deadlock freedom)
             while (existsSameOrHigher(threadId, j) && victim[j].value == threadId) 
             {
                 // waits while lokced
             }
+
+           // either because its not competing with another thread, or another thread overwrote victim[j] after it
         }
     }
 
     @Override
     public void unlock(int threadId) 
     {
-        level[threadId].value = 0; //changes val to become unlocked
+        level[threadId].value = 0; //changes val to become unlocked, and releases the thread from every level it occupied
     }
 }
