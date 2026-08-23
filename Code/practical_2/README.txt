@@ -14,3 +14,21 @@ Conveniently, there is a Makefile to run the program, therefore we can easily ru
     make all
     make run
 3. To clean up, type the following and enter
+
+===== LOCKS IMPLEMENTED =====
+
+===== FILTER LOCK =====
+The threads squeeze through narrowing doorways;
+at each door one thread volunteers to wait if someone shows up at the same time.
+Exactly one thread gets stuck while the rest move on.
+Mutual exclusion is achieved (only one thread reaches the last doorway), and it is
+deadlock and starvation free. However, a thread can wait for a long time (it may be repeatedly
+selected as the volunteer).
+
+===== BAKERY LOCK =====
+Works with a ticketing system where threads are served in order of their tickets.
+If two threads take the same ticket, the one with the smaller thread ID goes first.
+There is mutual exclusion, deadlock-freedom and starvation-freedom, since service order is followed.
+Threads are serviced in a first-come-first-served order which can be considered as fair.
+There are, however, caveats, such as a thread staying in the critical section for too long when
+served, or the integer limit.
