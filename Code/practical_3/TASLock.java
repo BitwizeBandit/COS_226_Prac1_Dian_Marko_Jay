@@ -34,7 +34,7 @@ public class TASLock
 
     public void lock() 
     {
-        while(testAndSet())
+        while(testAndSet()) { }
     }
 
     public void unlock() 
