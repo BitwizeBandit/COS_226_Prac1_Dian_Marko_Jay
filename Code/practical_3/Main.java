@@ -33,17 +33,15 @@ public class Main
         System.out.println("Runs per configuration: " + RUNS_PER_CONFIG);
         System.out.println();
  
-        // ------ our Single run demo
+        // our Single run demo
         runSingleDemo(new TASLock(), "TASLock", 2);
         System.out.println();
  
-        // --- Full contention experiment for Task 3 ---
+        // Full contention experiment for Task 3
         runExperiment("TASLock", TASLock::new);
         runExperiment("TTASLock", TTASLock::new);
     }
  
-    // A single, simple run - mirrors what the provided skeleton originally did,
-    // just with the missing lock initialisation filled in.
     private static void runSingleDemo(SimpleLock lock, String name, int numThreads) throws InterruptedException
     {
         counter = 0;
@@ -77,19 +75,19 @@ public class Main
         System.out.println("testAndSet() calls: " + lock.getTestAndSetCount());
     }
  
-    // Runs the full 2/4/8/16/32-thread x 5-repetition sweep for one lock implementation. 
+    // Runs the full 2/4/8/16/32 thread x 5repetition sweep for one lock implementation. 
     // Prints BOTH:
-    //   (a) a human-readable averaged table (for the console / quick check)
-    //   (b) raw per-iteration rows, tab-separated, matching the layout of
-    //       the "COS 226 Practical 3 Data" spreadsheet -- so each printed
-    //       row can be copy-pasted straight into the corresponding
+    //   (a) a readable averaged table (for the console / quick check)
+    //   (b) raw iteration rows, tab separated, matching the layout of
+    //       the "COS 226 Practical 3 Data" spreadsheet. so each printed
+    //       row can be copy pasted straight into the corresponding
     //       "Iteration 1..5" row for a given thread count in the sheet.
     private static void runExperiment(String name, Supplier<SimpleLock> lockFactory) throws InterruptedException
     {
         System.out.println("=== " + name + " ===");
         System.out.printf("%-10s %-20s %-25s%n", "Threads", "Avg Time (ms)", "Avg testAndSet() calls");
  
-        // Raw results kept so we can print copy-paste rows afterwards,
+        // Raw results kept so we can print copy paste rows afterwards,
         // one row of 5 values per thread count.
         double[][] rawTimesMs = new double[THREAD_COUNTS.length][RUNS_PER_CONFIG];
         long[][] rawCalls = new long[THREAD_COUNTS.length][RUNS_PER_CONFIG];
