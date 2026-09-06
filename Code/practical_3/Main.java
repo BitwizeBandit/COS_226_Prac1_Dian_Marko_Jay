@@ -22,8 +22,8 @@ public class Main
     private static final int RUNS_PER_CONFIG = 5;
  
     // Shared counter incremented by every thread inside the critical section. 
-    // volatile is enough here (not a replacement for the lock) purely so that the final read in the main thread is
-    // guaranteed to see the last writer's value after join()
+    // volatile is enough here (not a replacement for the lock) purely so that 
+    // the final read in the main thread is guaranteed to see the last writer's value after join().
     private static volatile int counter;
  
     public static void main(String[] args) throws InterruptedException
@@ -33,17 +33,17 @@ public class Main
         System.out.println("Runs per configuration: " + RUNS_PER_CONFIG);
         System.out.println();
  
-        // -------- Our Single run demo
+        // ------ our Single run demo
         runSingleDemo(new TASLock(), "TASLock", 2);
         System.out.println();
  
-        // ------ Full contention experiment for Task 3 
+        // --- Full contention experiment for Task 3 ---
         runExperiment("TASLock", TASLock::new);
         runExperiment("TTASLock", TTASLock::new);
     }
  
-    // A single, simple run: mirroring what the provided skeleton originally did,
-    // just with the missing lock initialisation filled in
+    // A single, simple run - mirrors what the provided skeleton originally did,
+    // just with the missing lock initialisation filled in.
     private static void runSingleDemo(SimpleLock lock, String name, int numThreads) throws InterruptedException
     {
         counter = 0;
@@ -77,15 +77,26 @@ public class Main
         System.out.println("testAndSet() calls: " + lock.getTestAndSetCount());
     }
  
-    // Runs the full 2/4/8/16/32-thread x 5-repetition sweep for one lock
-    // implementation and prints an averaged results table
+    // Runs the full 2/4/8/16/32-thread x 5-repetition sweep for one lock implementation. 
+    // Prints BOTH:
+    //   (a) a human-readable averaged table (for the console / quick check)
+    //   (b) raw per-iteration rows, tab-separated, matching the layout of
+    //       the "COS 226 Practical 3 Data" spreadsheet -- so each printed
+    //       row can be copy-pasted straight into the corresponding
+    //       "Iteration 1..5" row for a given thread count in the sheet.
     private static void runExperiment(String name, Supplier<SimpleLock> lockFactory) throws InterruptedException
     {
         System.out.println("=== " + name + " ===");
         System.out.printf("%-10s %-20s %-25s%n", "Threads", "Avg Time (ms)", "Avg testAndSet() calls");
  
-        for (int numThreads : THREAD_COUNTS)
+        // Raw results kept so we can print copy-paste rows afterwards,
+        // one row of 5 values per thread count.
+        double[][] rawTimesMs = new double[THREAD_COUNTS.length][RUNS_PER_CONFIG];
+        long[][] rawCalls = new long[THREAD_COUNTS.length][RUNS_PER_CONFIG];
+ 
+        for (int t = 0; t < THREAD_COUNTS.length; t++)
         {
+            int numThreads = THREAD_COUNTS[t];
             double totalTimeMs = 0;
             double totalCalls = 0;
  
@@ -107,7 +118,6 @@ public class Main
                             lock.unlock();
                         }
                     });
-
                     threads[i].start();
                 }
  
@@ -119,21 +129,51 @@ public class Main
                 long endTime = System.nanoTime();
  
                 long expected = (long) numThreads * INCREMENTS_PER_THREAD;
-                
                 if (counter != expected)
                 {
-                    // If this ever prints, mutual exclusion has a bug, so it should never happen for a correct lock
+                    // If this ever prints, mutual exclusion has a bug:  so it should never happen for a correct lock
                     System.out.println("WARNING: expected " + expected + " but got " + counter + " (mutual exclusion may be broken!)");
                 }
  
-                totalTimeMs += (endTime - startTime) / 1_000_000.0;
-                totalCalls += lock.getTestAndSetCount();
+                double timeMs = (endTime - startTime) / 1_000_000.0;
+                long calls = lock.getTestAndSetCount();
+ 
+                rawTimesMs[t][run] = timeMs;
+                rawCalls[t][run] = calls;
+ 
+                totalTimeMs += timeMs;
+                totalCalls += calls;
             }
  
             double avgTimeMs = totalTimeMs / RUNS_PER_CONFIG;
             double avgCalls = totalCalls / RUNS_PER_CONFIG;
  
             System.out.printf("%-10d %-20.2f %-25.0f%n", numThreads, avgTimeMs, avgCalls);
+        }
+ 
+        System.out.println();
+        System.out.println("--- Raw per-iteration data for " + name
+                + " (paste each row into the matching 'Execution Time' / 'testAndSet() Invocations'"
+                + " row of the sheet, starting at the first iteration column for that thread count) ---");
+ 
+        for (int t = 0; t < THREAD_COUNTS.length; t++)
+        {
+            StringBuilder timeRow = new StringBuilder(THREAD_COUNTS[t] + " threads - Execution Time (ms):\t");
+            StringBuilder callRow = new StringBuilder(THREAD_COUNTS[t] + " threads - testAndSet() Invocations:\t");
+ 
+            for (int run = 0; run < RUNS_PER_CONFIG; run++)
+            {
+                if (run > 0)
+                {
+                    timeRow.append("\t");
+                    callRow.append("\t");
+                }
+                timeRow.append(String.format("%.2f", rawTimesMs[t][run]));
+                callRow.append(rawCalls[t][run]);
+            }
+ 
+            System.out.println(timeRow);
+            System.out.println(callRow);
         }
  
         System.out.println();
