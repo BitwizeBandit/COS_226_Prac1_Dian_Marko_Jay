@@ -9,7 +9,7 @@
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class TASLock 
+public class TASLock implements SimpleLock
 {
 
     private final AtomicBoolean locked = new AtomicBoolean(false);
@@ -70,10 +70,5 @@ public class TASLock
         testAndSetCount.set(0); // in case we need to reset the count
     }
  
-    @Override
-    public void resetTestAndSetCount()
-    {
-        testAndSetCount.set(0);
-    }
     
 }
