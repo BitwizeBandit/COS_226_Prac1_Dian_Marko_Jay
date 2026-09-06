@@ -4,14 +4,16 @@
 
 // COS 226 (Concurrent Systems) Practical 3
 // A practical exploring test-and-set locks
-// Last Updated: 2 September 2026
+// Last Updated: 6 September 2026
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class TASLock 
 {
 
     private final AtomicBoolean locked = new AtomicBoolean(false);
+    private final AtomicLong testAndSetCount = new AtomicLong(0);
 
     /* Do not modify this method */
     private boolean testAndSet() 
@@ -36,6 +38,7 @@ public class TASLock
     // Every iteration of this loop performs one atomic RMW operation,
     // regardless of whether the lock is actually free. 
     // Under contention this is exactly what floods the bus with invalidations
+    @Override
     public void lock() 
     {
         while(true){
@@ -49,6 +52,7 @@ public class TASLock
         }
     }
 
+    @Override
     public void unlock() 
     {
         locked.set(false); // release for other threads
@@ -58,6 +62,12 @@ public class TASLock
     public long getTestAndSetCount()
     {
         return testAndSetCount.get();
+    }
+
+    @Override
+    public void resetTestAndSetCount()
+    {
+        testAndSetCount.set(0); // in case we need to reset the count
     }
  
     @Override
