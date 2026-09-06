@@ -22,6 +22,7 @@ public class TTASLock implements SimpleLock
         return locked.getAndSet(true) ;
     }
 
+    @Override
     public void lock()
     {
         while (true)
@@ -41,6 +42,7 @@ public class TTASLock implements SimpleLock
         }
     }
 
+    @Override
     public void unlock()
     {
         locked.set(false);
