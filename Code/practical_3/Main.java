@@ -1,3 +1,17 @@
+// Dian le Roux (25147065)
+// Marko de Swardt (24658562)
+// Jay Macaskill (25198387)
+ 
+// COS 226 (Concurrent Systems) Practical 3
+// A practical exploring test-and-set locks
+// Last Updated: 6 September 2026
+ 
+// ------------------------ our  Contention Tests XD -----------------
+// Runs the shared counter workload with Both our TASLock and TTASLock over
+// an increasing number of threads (2, 4, 8, 16, 32) each config
+// gets repeated 5 times, and prints the avg execution time and the
+// avg number of testAndSet() invocs for each config
+
 public class Main 
 {
 

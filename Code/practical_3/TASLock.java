@@ -32,14 +32,38 @@ public class TASLock
         }
     */
 
+
+    // Every iteration of this loop performs one atomic RMW operation,
+    // regardless of whether the lock is actually free. 
+    // Under contention this is exactly what floods the bus with invalidations
     public void lock() 
     {
-        while(testAndSet()) { }
+        while(true){
+
+            testAndSetCount.incrementAndGet(); // counting this invoc of testAndSet()
+
+            if(!testAndSet())
+            {
+                return; // false was returned, then lock was free and we now hold it
+            }
+        }
     }
 
     public void unlock() 
     {
         locked.set(false); // release for other threads
+    }
+
+    @Override
+    public long getTestAndSetCount()
+    {
+        return testAndSetCount.get();
+    }
+ 
+    @Override
+    public void resetTestAndSetCount()
+    {
+        testAndSetCount.set(0);
     }
     
 }
