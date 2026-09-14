@@ -6,6 +6,8 @@ Jay Macaskill (25198387)
 COS 226 (Concurrent Systems) Assignment 1
 An assignment exploring TTAS, MCS and CLH locks
 Last Updated: 14 September 2026
+
+Lock.java
 */
 
 import java.util.concurrent.atomic.*;
@@ -14,6 +16,40 @@ public interface Lock
 {
     void lock();
     void unlock();
+}
+
+// ==== TTAS LOCK ==== //
+
+class TTAS implements Lock
+{
+    @Override
+    public void lock()
+    {
+
+    }
+
+    @Override
+    public void unlock()
+    {
+
+    }
+}
+
+// ==== CLH LOCK ==== //
+
+class CLH implements Lock
+{
+    @Override
+    public void lock()
+    {
+
+    }
+
+    @Override
+    public void unlock()
+    {
+
+    }
 }
 
 // ==== MCS LOCK ==== //
