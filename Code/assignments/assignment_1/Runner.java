@@ -5,7 +5,7 @@ Jay Macaskill (25198387)
 
 COS 226 (Concurrent Systems) Assignment 1
 An assignment exploring TTAS, MCS and CLH locks
-Last Updated: 14 September 2026
+Last Updated: 15 September 2026
 
 Runner.java
 */
@@ -73,6 +73,11 @@ public class Runner
     {
         for (int i = 0; i < iterations; i ++) // how many iterations we have of the bidding
         {
+
+            double currentHighest = auction.getHighestBid();  // read it without the lock, thats why highestBid(in Aucion.java) must be volatile
+            double increment = 1 + ThreadLocalRandom.current().nextInt(1, 10);
+            double newBid = currentHighest + increment; // here we place a bid using the random increment
+
             long waitStart = System.nanoTime();
             lock.lock(); // ignore the error here, it's pulling from a different folder
             long acquired = System.nanoTime();
@@ -81,13 +86,14 @@ public class Runner
 
             try
             {
-                double currentHighest = auction.getHighestBid();
-                double increment = 1 + ThreadLocalRandom.current().nextInt(1, 10);
-                double newBid = currentHighest + increment; // here we place a bid using the random increment
+                
                 auction.placeBid(bidderId, newBid);
                 totalBidsPlaced.incrementAndGet();
-                if (auction.getHighestBidder() == bidderId) // double checking that it did succeed
+
+                if (auction.getHighestBidder() == bidderId){ // double checking that it did succeed
+
                     bidsWonPerBidder[bidderId].incrementAndGet();
+                }
             }
             finally
             {
