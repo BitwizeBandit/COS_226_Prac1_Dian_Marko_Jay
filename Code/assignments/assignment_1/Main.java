@@ -18,9 +18,20 @@ public class Main
         int numberOfThreads = 16; /*Change -- 2, 4, 8, 16*/
         int iterations = 200;
 
-        Auction auction =new Auction(AuctionUtils.generateItemName());
-        Lock lock = new MCS(); /*Add your lock here --  TTAS, CLH, MCS*/
-        Runner runner = new Runner(numberOfThreads,iterations,auction,lock);
+        /*Add your lock here --  TTAS, CLH, MCS*/
+        Lock lockCLH = new CLH();
+        Lock lockMCS = new MCS();
+
+        // ------------------ MCS
+        System.out.println("=== MCS ===");
+        Auction auctionMCS = new Auction(AuctionUtils.generateItemName());
+        Runner runner = new Runner(numberOfThreads,iterations, auctionMCS, lockMCS);
+        runner.run();
+
+        // ------------------ CLH
+        System.out.println("=== CLH ===");
+        Auction auctionCLH = new Auction(AuctionUtils.generateItemName());
+        Runner runner = new Runner(numberOfThreads,iterations, auctionCLH, lockCLH);
         runner.run();
     }
 }
