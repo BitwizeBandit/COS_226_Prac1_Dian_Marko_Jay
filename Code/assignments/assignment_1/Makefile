@@ -1,4 +1,4 @@
-# COS 226 - Practical 3 (Test-and-Set Locks and Contention)
+# COS 226 - Assignment 1 (TTAS, CLH and MCS locks)
 # Dian le Roux (25147065), Marko de Swardt (24658562), Jay Macaskill (25198387)
 
 # Usage:
