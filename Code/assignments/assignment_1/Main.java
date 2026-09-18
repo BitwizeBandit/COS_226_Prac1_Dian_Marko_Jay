@@ -5,7 +5,7 @@ Jay Macaskill (25198387)
 
 COS 226 (Concurrent Systems) Assignment 1
 An assignment exploring TTAS, MCS and CLH locks
-Last Updated: 14 September 2026
+Last Updated: 18 September 2026
 
 Main.java
 */
@@ -33,5 +33,8 @@ public class Main
         Auction auctionCLH = new Auction(AuctionUtils.generateItemName());
         Runner runner = new Runner(numberOfThreads,iterations, auctionCLH, lockCLH);
         runner.run();
+
+        //TTAS
+        System.out.println("=== CLH ===");
     }
 }
