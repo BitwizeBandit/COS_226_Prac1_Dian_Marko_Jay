@@ -5,7 +5,7 @@ Jay Macaskill (25198387)
 
 COS 226 (Concurrent Systems) Assignment 1
 An assignment exploring TTAS, MCS and CLH locks
-Last Updated: 14 September 2026
+Last Updated: 18 September 2026
 
 Main.java
 */
@@ -18,9 +18,28 @@ public class Main
         int numberOfThreads = 16; /*Change -- 2, 4, 8, 16*/
         int iterations = 200;
 
-        Auction auction =new Auction(AuctionUtils.generateItemName());
-        Lock lock = new MCS(); /*Add your lock here --  TTAS, CLH, MCS*/
-        Runner runner = new Runner(numberOfThreads,iterations,auction,lock);
-        runner.run();
+        /*Add your lock here --  TTAS, CLH, MCS*/
+        Lock lockCLH = new CLH();
+        Lock lockMCS = new MCS();
+        Lock lockTTAS = new TTAS();
+
+        //TTAS
+        System.out.println("\n============= TTAS =====");
+        Auction auctionTTAS = new Auction(AuctionUtils.generateItemName());
+        Runner runnerTTAS = new Runner(numberOfThreads, iterations, auctionTTAS, lockTTAS);
+        runnerTTAS.run();
+
+        // ------------------ CLH
+        System.out.println("\n============= CLH =======");
+        Auction auctionCLH = new Auction(AuctionUtils.generateItemName());
+        Runner runnerCLH = new Runner(numberOfThreads,iterations, auctionCLH, lockCLH);
+        runnerCLH.run();
+
+        // ------------------ MCS
+        System.out.println("\n============= MCS =====");
+        Auction auctionMCS = new Auction(AuctionUtils.generateItemName());
+        Runner runnerMCS = new Runner(numberOfThreads,iterations, auctionMCS, lockMCS);
+        runnerMCS.run();
+        
     }
 }

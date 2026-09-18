@@ -2,8 +2,8 @@ public class Auction
 {
 
     private final String itemName;
-    private double highestBid;
-    private int highestBidder;
+    private volatile double highestBid;
+    private volatile int highestBidder;
 
     public Auction(String itemName) 
     {
