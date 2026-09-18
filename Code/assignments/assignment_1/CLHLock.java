@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.*;
 class CLH implements Lock
 {
 
-    static class CHLNode {
+    static class CLHNode {
         volatile boolean locked = false; // true : still waiting/holding
     }
 
