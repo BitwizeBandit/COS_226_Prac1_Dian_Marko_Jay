@@ -23,22 +23,23 @@ public class Main
         Lock lockMCS = new MCS();
         Lock lockTTAS = new TTAS();
 
-        // ------------------ MCS
-        System.out.println("=== MCS ===");
-        Auction auctionMCS = new Auction(AuctionUtils.generateItemName());
-        Runner runnerMCS = new Runner(numberOfThreads,iterations, auctionMCS, lockMCS);
-        runnerMCS.run();
+        //TTAS
+        System.out.println("\n============= TTAS =====");
+        Auction auctionTTAS = new Auction(AuctionUtils.generateItemName());
+        Runner runnerTTAS = new Runner(numberOfThreads, iterations, auctionTTAS, lockTTAS);
+        runnerTTAS.run();
 
         // ------------------ CLH
-        System.out.println("=== CLH ===");
+        System.out.println("\n============= CLH =======");
         Auction auctionCLH = new Auction(AuctionUtils.generateItemName());
         Runner runnerCLH = new Runner(numberOfThreads,iterations, auctionCLH, lockCLH);
         runnerCLH.run();
 
-        //TTAS
-        System.out.println("=== TTAS ===");
-        Auction auctionTTAS = new Auction(AuctionUtils.generateItemName());
-        Runner runnerTTAS = new Runner(numberOfThreads, iterations, auctionTTAS, lockTTAS);
-        runnerTTAS.run();
+        // ------------------ MCS
+        System.out.println("\n============= MCS =====");
+        Auction auctionMCS = new Auction(AuctionUtils.generateItemName());
+        Runner runnerMCS = new Runner(numberOfThreads,iterations, auctionMCS, lockMCS);
+        runnerMCS.run();
+        
     }
 }
