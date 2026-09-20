@@ -3,7 +3,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Node 
 {
-    int value;
+    int value; // acts as the 'key' vaiable used in textbook
     Node next;
 
     final Lock lock = new ReentrantLock();
