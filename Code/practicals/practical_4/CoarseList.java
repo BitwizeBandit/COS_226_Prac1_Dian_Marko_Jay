@@ -19,7 +19,7 @@ public class CoarseList
 
     public boolean add(int value) 
     {
-        // Acquiring the global lock before touching any part of the list.
+        // Acquiring the global lock before touching any part of the list
         // Nothing below this line can run concurrently with any other add/remove/contains call
         lock.lock();
 
@@ -35,7 +35,7 @@ public class CoarseList
             while(curr.value < value)
             {
                 pred = curr;
-                curr = curr
+                curr = curr.next;
             }
 
             // dupes not allowed, do nothing and report fail
@@ -69,13 +69,67 @@ public class CoarseList
     // and false if it wasnt in list
     public boolean remove(int value) 
     {
-        // TODO
-        return false;
+        lock.lock();
+
+        try {
+
+            Node pred = head;
+            Node curr = pred.next;
+
+            // traverse, after loop we will hopefully be at valid pos
+            while(curr.value < value)
+            {
+                pred = curr;
+                curr = curr.next;
+            }
+
+            if(curr.value == value)// if found
+            {
+                pred.next = curr.next;
+                return true;
+            }
+            else{ // when not present
+                return false;
+            }
+        }
+        finally{
+
+            lock.unlock();
+        }
     }
 
+    // check if a value is present in a list, returning true if value is present
     public boolean contains(int value) 
     {
-        // TODO
-        return false;
+        lock.lock();
+
+        // Read only traveling, but still needs the lock because another thread could update
+        // next pointers while we travel the nodes, which is unsafe to observe concurrently
+
+        try{
+       
+            Node curr = head;
+
+            // travel
+            while(curr.value < value)
+            {
+                curr = curr.next;
+            }
+
+            // check if node is in list
+            if(curr.value == value)
+            {
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        finally{
+
+            lock.unlock();
+        }
+
+
     }
 }
