@@ -16,7 +16,7 @@ public class Main
             double coarseAvg = runCoarseTrials(numberOfThreads);
             double fineAvg = runFineTrials(numberOfThreads);
 
-            System.out.printf("%d\t%.3f\t%.3f%n", numberOfThreads, coarseAvg, fineAvg);
+            System.out.printf("%d\t\t%.3f\t\t\t%.3f%n", numberOfThreads, coarseAvg, fineAvg);
         }
     }
 
