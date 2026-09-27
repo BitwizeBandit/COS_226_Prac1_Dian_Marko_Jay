@@ -46,19 +46,19 @@ public class Main
         return (total / (double) TRIALS) / 1_000_000.0; // ns -> ms
     }
 
-    private static long runCoarseWorkload(CoarseList list, int numberOfThreads)
-            throws InterruptedException 
+    private static long runCoarseWorkload(CoarseList list, int numberOfThreads) throws InterruptedException 
     {
         Thread[] threads = new Thread[numberOfThreads];
 
         long startTime = System.nanoTime();
 
-        for (int i = 0; i < numberOfThreads; i++) 
+        for(int i = 0; i < numberOfThreads; i++) 
         {
             final int threadID = i;
 
             threads[i] = new Thread(() -> {
-                for (int j = 0; j < OPERATIONS_PER_THREAD; j++) 
+
+                for(int j = 0; j < OPERATIONS_PER_THREAD; j++) 
                 {
                     int value = (threadID * 1000) + (j % 1000);
 
@@ -80,7 +80,7 @@ public class Main
             threads[i].start();
         }
 
-        for (Thread thread : threads) 
+        for(Thread thread : threads) 
         {
             thread.join();
         }
@@ -88,8 +88,7 @@ public class Main
         return System.nanoTime() - startTime;
     }
 
-    private static long runFineWorkload(FineList list, int numberOfThreads)
-            throws InterruptedException 
+    private static long runFineWorkload(FineList list, int numberOfThreads) throws InterruptedException 
     {
         Thread[] threads = new Thread[numberOfThreads];
 
@@ -100,7 +99,8 @@ public class Main
             final int threadID = i;
 
             threads[i] = new Thread(() -> {
-                for (int j = 0; j < OPERATIONS_PER_THREAD; j++) 
+
+                for(int j = 0; j < OPERATIONS_PER_THREAD; j++) 
                 {
                     int value = (threadID * 1000) + (j % 1000);
 
@@ -122,7 +122,7 @@ public class Main
             threads[i].start();
         }
 
-        for (Thread thread : threads) 
+        for(Thread thread : threads) 
         {
             thread.join();
         }
