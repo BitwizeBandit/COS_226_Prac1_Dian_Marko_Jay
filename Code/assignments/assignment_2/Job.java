@@ -1,5 +1,8 @@
 /*
-COS 226 (Concurrent Systems) Assignment 2
+Dian le Roux (25147065)
+Marko de Swardt (24658562)
+Jay Macaskill (25198387)
+
 Concurrent Queues and Producer-Consumer Systems
  
 Job.java

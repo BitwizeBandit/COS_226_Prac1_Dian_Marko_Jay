@@ -38,7 +38,10 @@ public class LockFreeQueue<T> implements ConcurrentQueue<T>
     @Override
     public void enq(T item)
     {
-        if (item == null) throw new NullPointerException("null items are not allowed");
+        if (item == null) {
+            throw new NullPointerException("null items are not allowed");
+        }
+
         Node node = new Node(item);
         
         while (true)
@@ -56,7 +59,9 @@ public class LockFreeQueue<T> implements ConcurrentQueue<T>
                         return;
                     }
                 }
-                else tail.compareAndSet(last, next);
+                else {
+                    tail.compareAndSet(last, next);
+                }
             }
         }
     }
@@ -74,13 +79,20 @@ public class LockFreeQueue<T> implements ConcurrentQueue<T>
             {
                 if (first == last)
                 {
-                    if (next == null) return null;
-                    else tail.compareAndSet(last, next);
+                    if (next == null) {
+                        return null;
+                    }
+                    else {
+                        tail.compareAndSet(last, next);
+                    }
                 }
                 else
                 {
                     T temp = next.value;
-                    if (head.compareAndSet(first, next)) return temp;
+                    if (head.compareAndSet(first, next)) 
+                    {
+                        return temp;
+                    }
                 }
             }
         }

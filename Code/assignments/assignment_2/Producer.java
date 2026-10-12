@@ -1,5 +1,8 @@
 /*
-COS 226 (Concurrent Systems) Assignment 2
+Dian le Roux (25147065)
+Marko de Swardt (24658562)
+Jay Macaskill (25198387)
+
 Concurrent Queues and Producer-Consumer Systems
 
 Producer.java
@@ -12,7 +15,7 @@ Generates its assigned number of jobs and enqueues each with enq().
 Works with any ConcurrentQueue.
 
 Job ids are unique across producers: producer p owns the id range
-[firstId, firstId + jobsToProduce).
+[firstId, firstId + jobsToProduce)
 */
 public class Producer implements Runnable
 {
@@ -22,8 +25,7 @@ public class Producer implements Runnable
     private final ConcurrentQueue<Job> queue;
     private final AtomicLong totalProduced;
 
-    public Producer(int producerId, int firstId, int jobsToProduce,
-                    ConcurrentQueue<Job> queue, AtomicLong totalProduced)
+    public Producer(int producerId, int firstId, int jobsToProduce, ConcurrentQueue<Job> queue, AtomicLong totalProduced)
     {
         this.producerId = producerId;
         this.firstId = firstId;

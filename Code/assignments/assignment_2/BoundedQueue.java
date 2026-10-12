@@ -1,5 +1,8 @@
 /*
-COS 226 (Concurrent Systems) Assignment 2
+Dian le Roux (25147065)
+Marko de Swardt (24658562)
+Jay Macaskill (25198387)
+
 Concurrent Queues and Producer-Consumer Systems
 
 BoundedQueue.java
@@ -10,11 +13,11 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 /*
-Bounded partial queue (Chapter 10, section 3 / textbook 10.3).
 
 Singly linked list with a sentinel node. Two locks:
     enqLock guards the tail (enqueuers only touch the tail)
     deqLock guards the head (dequeuers only touch the head)
+
 So an enq() and a deq() can run in parallel as long as the queue is neither
 empty nor full.
 
@@ -25,8 +28,8 @@ Two conditions:
 size is an AtomicInteger, the only variable both ends touch. The method that
 changes the queue across the empty/non-empty (or full/non-full) boundary
 wakes the threads waiting at the other end. To signal, it must first take
-that end's lock, which is what prevents a lost wake-up: the waiter checks the
-condition and calls await() while holding the same lock.
+that end's lock, which is what prevents a lost 'wake up': the waiter checks the
+condition and calls await() while holding the same lock
 */
 public class BoundedQueue<T> implements ConcurrentQueue<T>
 {
@@ -55,8 +58,12 @@ public class BoundedQueue<T> implements ConcurrentQueue<T>
     public BoundedQueue(int capacity)
     {
         if (capacity <= 0)
+        {
             throw new IllegalArgumentException("capacity must be positive");
+        }
+            
         this.capacity = capacity;
+
         head = new Node(null); // sentinel
         tail = head;
     }
@@ -65,24 +72,34 @@ public class BoundedQueue<T> implements ConcurrentQueue<T>
     public void enq(T item)
     {
         if (item == null)
+        {
             throw new NullPointerException("null items are not allowed");
+        }
 
         boolean mustWakeDequeuers = false;
         enqLock.lock();
+
         try
         {
             while (size.get() == capacity)
+            {
                 notFullCondition.await(); // wait while full
+            }
 
             Node node = new Node(item);
             tail.next = node; // link new node (linearisation point)
+
             tail = node;      // swing tail
+
             if (size.getAndIncrement() == 0)
+            {
                 mustWakeDequeuers = true; // queue went from empty to non-empty
+            }
         }
         catch (InterruptedException e)
         {
             Thread.currentThread().interrupt();
+
             throw new IllegalStateException("interrupted while waiting in enq()", e);
         }
         finally
@@ -93,6 +110,7 @@ public class BoundedQueue<T> implements ConcurrentQueue<T>
         if (mustWakeDequeuers)
         {
             deqLock.lock();
+
             try
             {
                 notEmptyCondition.signalAll();
@@ -110,15 +128,21 @@ public class BoundedQueue<T> implements ConcurrentQueue<T>
         T result;
         boolean mustWakeEnqueuers = false;
         deqLock.lock();
+
         try
         {
             while (size.get() == 0)
+            {
                 notEmptyCondition.await(); // wait while empty
+            }
 
             result = head.next.value; // value of first real node
-            head = head.next;         // that node becomes the new sentinel
+            head = head.next;   // that node becomes the new sentinel
+
             if (size.getAndDecrement() == capacity)
-                mustWakeEnqueuers = true; // queue went from full to non-full
+            {
+                mustWakeEnqueuers = true; // queue went from full to nonfull
+            }
         }
         catch (InterruptedException e)
         {
@@ -133,6 +157,7 @@ public class BoundedQueue<T> implements ConcurrentQueue<T>
         if (mustWakeEnqueuers)
         {
             enqLock.lock();
+            
             try
             {
                 notFullCondition.signalAll();

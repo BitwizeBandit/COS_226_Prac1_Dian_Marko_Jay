@@ -1,5 +1,8 @@
 /*
-COS 226 (Concurrent Systems) Assignment 2
+Dian le Roux (25147065)
+Marko de Swardt (24658562)
+Jay Macaskill (25198387)
+
 Concurrent Queues and Producer-Consumer Systems
 
 Simulation.java
@@ -10,9 +13,9 @@ import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.concurrent.atomic.AtomicLong;
 
 /*
-Runs one complete producer-consumer execution against a chosen queue and
+Runs one complete producer consumer execution against a chosen queue and
 returns the measurements. Used by both Main (single run, printed report) and
-ExperimentRunner (the full Task 3 table).
+ExperimentRunner-------------------------   the full Task 3 table)
 */
 public final class Simulation
 {
