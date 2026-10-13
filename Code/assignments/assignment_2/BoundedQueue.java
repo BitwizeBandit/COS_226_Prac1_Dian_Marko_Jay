@@ -15,21 +15,19 @@ import java.util.concurrent.locks.ReentrantLock;
 /*
 
 Singly linked list with a sentinel node. Two locks:
-    enqLock guards the tail (enqueuers only touch the tail)
-    deqLock guards the head (dequeuers only touch the head)
+    enqLock guards tail (enqueuers only touch tail)
+    deqLock guards head (dequeuers only touch head)
 
-So an enq() and a deq() can run in parallel as long as the queue is neither
-empty nor full.
+enq() and a deq() can run in parallel as long as the queue is neither empty nor full.
 
 Two conditions:
-    notFullCondition  (on enqLock) enqueuers wait here while size == capacity
+    notFullCondition (on enqLock) enqueuers wait here while size == capacity
     notEmptyCondition (on deqLock) dequeuers wait here while size == 0
 
 size is an AtomicInteger, the only variable both ends touch. The method that
-changes the queue across the empty/non-empty (or full/non-full) boundary
-wakes the threads waiting at the other end. To signal, it must first take
-that end's lock, which is what prevents a lost 'wake up': the waiter checks the
-condition and calls await() while holding the same lock
+changes the queue across the empty/non-empty boundary wakes the threads waiting at the other end.
+To signal, it must first take that end's lock, the waiter checks the condition and calls 
+await() while holding the same lock
 */
 public class BoundedQueue<T> implements ConcurrentQueue<T>
 {
@@ -41,8 +39,8 @@ public class BoundedQueue<T> implements ConcurrentQueue<T>
     private final AtomicInteger size = new AtomicInteger(0);
     private final int capacity;
 
-    private volatile Node head; // always the sentinel
-    private volatile Node tail; // last real node (or the sentinel if empty)
+    private volatile Node head; // always sentinel
+    private volatile Node tail; // last real node
 
     private class Node
     {
@@ -87,9 +85,9 @@ public class BoundedQueue<T> implements ConcurrentQueue<T>
             }
 
             Node node = new Node(item);
-            tail.next = node; // link new node (linearisation point)
+            tail.next = node; // link new node
 
-            tail = node;      // swing tail
+            tail = node; // swing tail
 
             if (size.getAndIncrement() == 0)
             {
@@ -136,8 +134,8 @@ public class BoundedQueue<T> implements ConcurrentQueue<T>
                 notEmptyCondition.await(); // wait while empty
             }
 
-            result = head.next.value; // value of first real node
-            head = head.next;   // that node becomes the new sentinel
+            result = head.next.value; // value of first node
+            head = head.next; // node becomes the new sentinel
 
             if (size.getAndDecrement() == capacity)
             {

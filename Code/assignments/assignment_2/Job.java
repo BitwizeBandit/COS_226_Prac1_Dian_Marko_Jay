@@ -4,18 +4,14 @@ Marko de Swardt (24658562)
 Jay Macaskill (25198387)
 
 Concurrent Queues and Producer-Consumer Systems
- 
-Job.java
-*/
- 
-/*
+
 A single unit of work passed from a producer to a consumer.
 Immutable, so it can be shared safely between threads without locking.
 
-    id: globally unique across all producers (0 .. totalJobs-1)
-    producerId: which producer made it
-    sequence: the job's position in its producer's output (0, 1, 2, ...),
-               used to check that the queue keeps FIFO order per producer
+id: globally unique across all producers (0 .. totalJobs-1)
+producerId: which producer made it
+sequence: the job's position in its producer's output (0, 1, 2, ...),
+        used to check that the queue keeps FIFO order per producer
 */
 public final class Job
 {

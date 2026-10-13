@@ -3,11 +3,8 @@ Dian le Roux (25147065)
 Marko de Swardt (24658562)
 Jay Macaskill (25198387)
 
-COS 226 (Concurrent Systems) Assignment 2
-An assignment exploring Concurrent Queues and Producer-Consumer Systems
-Last Updated: 12 October 2026
-
-LockFreeQueue.java
+Concurrent Queues and Producer-Consumer Systems
+Last Updated: 13 October 2026
 */
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -79,7 +76,8 @@ public class LockFreeQueue<T> implements ConcurrentQueue<T>
             {
                 if (first == last)
                 {
-                    if (next == null) {
+                    if (next == null)
+                    {
                         return null;
                     }
                     else {

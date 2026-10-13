@@ -4,8 +4,6 @@ Marko de Swardt (24658562)
 Jay Macaskill (25198387)
 
 Concurrent Queues and Producer-Consumer Systems
-
-Simulation.java
 */
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -14,8 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /*
 Runs one complete producer consumer execution against a chosen queue and
-returns the measurements. Used by both Main (single run, printed report) and
-ExperimentRunner-------------------------   the full Task 3 table)
+returns the measurements. Used by both Main and ExperimentRunner
 */
 public final class Simulation
 {
@@ -62,7 +59,7 @@ public final class Simulation
     }
 
     public static Result run(String queueType, int numberOfProducers,
-                             int numberOfConsumers, int totalJobs, int capacity)
+                            int numberOfConsumers, int totalJobs, int capacity)
         throws InterruptedException
     {
         ConcurrentQueue<Job> queue = createQueue(queueType, capacity);
@@ -89,8 +86,7 @@ public final class Simulation
         Thread[] consumerThreads = new Thread[numberOfConsumers];
         for (int c = 0; c < numberOfConsumers; c++)
         {
-            consumers[c] = new Consumer(c, queue, totalJobs, numberOfProducers,
-                                        tickets, processedCount);
+            consumers[c] = new Consumer(c, queue, totalJobs, numberOfProducers, tickets, processedCount);
             consumerThreads[c] = new Thread(consumers[c], "consumer-" + c);
         }
 

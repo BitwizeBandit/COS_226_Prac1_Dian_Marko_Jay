@@ -5,8 +5,6 @@ Jay Macaskill (25198387)
 
 Concurrent Queues and Producer Consumer Systems
 
-Main.java
-
 Usage:
     java Main [BOUNDED|LOCKFREE] [producers] [consumers] [totalJobs] [capacity]
 Defaults:

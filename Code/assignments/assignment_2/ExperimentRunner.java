@@ -4,15 +4,6 @@ Marko de Swardt (24658562)
 Jay Macaskill (25198387)
 
 Concurrent Queues and Producer Consumer Systems
-
-ExperimentRunner.java
-
-Task 3: runs both queues under the three required configurations
-(4P/4C balanced, 6P/2C producer heavy, 2P/6C consumer-heavy) with the Same
-total workload and the SAME bounded capacity, repeats each run, and prints a
-table of averages.
-
-    java ExperimentRunner [totalJobs] [capacity] [repeats]
 */
 
 import java.util.Locale;
@@ -36,7 +27,9 @@ public class ExperimentRunner
 
         System.out.printf(Locale.US, "Total jobs: %d, bounded capacity: %d, repeats per cell: %d%n%n", totalJobs, capacity, repeats);
 
-        System.out.printf(Locale.US, "%-10s %-15s %9s %9s %12s %12s %10s %8s%n", "Queue", "Workload", "Producers", "Consumers", "Avg time(ms)", "Throughput/s", "Min time", "Correct");
+        System.out.printf(Locale.US, "%-10s %-15s %9s %9s %12s %12s %10s %8s%n",
+                        "Queue", "Workload", "Producers", "Consumers", "Avg time(ms)",
+                        "Throughput/s", "Min time", "Correct");
 
         for (int c = 0; c < CONFIGS.length; c++)
         {
