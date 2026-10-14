@@ -1,19 +1,19 @@
 /*
-COS 226 (Concurrent Systems) Assignment 2
+Dian le Roux (25147065)
+Marko de Swardt (24658562)
+Jay Macaskill (25198387)
+
 Concurrent Queues and Producer-Consumer Systems
 
-ConcurrentQueue.java
-*/
-
-/*
-Common interface for both queue implementations, so the same Producer and
-Consumer classes can be used with either one.
+Common interface for both queue impls, so the same Producer and
+Consumer classes can be used with either one
 
 deq() contract:
-    - BoundedQueue: blocks until an item is available, never returns null.
-    - LockFreeQueue: never blocks. Returns null if the queue is empty at the
-      moment of the call (the spec allows this, the consumer must retry).
-Null items are therefore illegal for both queues.
+    BoundedQueue: blocks until an item is available, never returns null.
+    LockFreeQueue: never blocks. Returns null if the queue is empty at the
+    moment of the call
+
+Null items are therefore not allowed for Both queues
 */
 public interface ConcurrentQueue<T>
 {
